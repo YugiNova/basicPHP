@@ -100,6 +100,18 @@ if (isset($_POST['register'])) {
         $confirmPassword = "Confirm password and password not match";
     }
 
+    //upload image
+    if($_FILES['avatar']){
+        $target_dir = "uploads/";
+        $target_file = $target_dir.uniqid(true)."_".basename($_FILES["avatar"]["name"]);
+        if(move_uploaded_file($_FILES["avatar"]["tmp_name"],$target_file)){
+            echo "Upload thanh cong";
+        }
+        else{
+            echo "Upload that bai";
+        }
+    }
+
     if($msgEmail === ""  && $msgConfirm  === ""){
         echo $email.$password;
         echo "<br>".sha1($password."random");
