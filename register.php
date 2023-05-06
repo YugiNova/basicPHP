@@ -6,8 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <style>
         body {
@@ -30,16 +29,19 @@
         }
 
         .custom-form input {
-            margin: 1rem 0;
+            margin: 0;
             font-size: 1.5rem;
         }
 
         .custom-form button {
             font-size: 1.5rem;
+            width: 100%;
         }
+
         .custom-form p {
             color: red;
             margin: 0;
+            margin-bottom: 1rem;
             text-align: left;
         }
     </style>
@@ -59,6 +61,7 @@
 $msgEmail = '';
 $msgPassword = '';
 $msgConfirm = '';
+$msgAvatar = '';
 
 $errors = [
     "email" => [],
@@ -68,54 +71,57 @@ $errors = [
 
 
 if (isset($_POST['register'])) {
-    echo "<pre>";
-    var_dump($_FILES);
-    echo "</pre>";
+
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm'];
+    $avatar = $_FILES["avatar"];
     // $avatar = $_POST['avatar'];
 
     //validate email
-    if(empty($email)){
+    if (empty($email)) {
         $msgEmail = "Email is required";
-    }
-    else if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $msgEmail = "Email not correct format";
     }
 
     //validate password
-    if(empty($password)){
+    if (empty($password)) {
         $msgPassword = "Password is required";
-    }
-    else if(strlen($msgPassword) < 6){
+    } else if (strlen(trim($password)) < 6) {
         $msgPassword = "Password must be over 6 character";
     }
 
     //validate confirm
-    if(empty($confirmPassword)){
-        $confirmPassword = "Confirm password is required";
-    }
-    else if($confirmPassword !== $password){
-        $confirmPassword = "Confirm password and password not match";
+    if (empty($confirmPassword)) {
+        $msgConfirm = "Confirm password is required";
+    } else if ($confirmPassword !== $password) {
+        $msgConfirm = "Confirm password and password not match";
     }
 
-    //upload image
-    if($_FILES['avatar']){
+    //validate image
+    if ($_FILES['avatar']['name'] === "") {
+        $msgAvatar = "Avatar is required";
+    } else if ($avatar["type"] != "image/png" && $avatar["type"] != "image/jpeg") {
+        $msgAvatar = "Image is only .png or .jpeg";
+    }
+
+    echo "<pre>";
+    var_dump($_FILES["avatar"]["type"]);
+    echo "</pre>";
+
+    if ($msgEmail === ""  && $msgPassword === "" && $msgConfirm  === "" && $msgAvatar === "") {
+        echo $email . sha1($password . "random");
+        echo "<br>" . sha1($password . "random");
         $target_dir = "uploads/";
-        $target_file = $target_dir.uniqid(true)."_".basename($_FILES["avatar"]["name"]);
-        if(move_uploaded_file($_FILES["avatar"]["tmp_name"],$target_file)){
+        $target_file = $target_dir . uniqid(true) . "_" . basename($_FILES["avatar"]["name"]);
+        if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
             echo "Upload thanh cong";
-        }
-        else{
+        } else {
             echo "Upload that bai";
         }
-    }
-
-    if($msgEmail === ""  && $msgConfirm  === ""){
-        echo $email.$password;
-        echo "<br>".sha1($password."random");
-        echo "<br>".strlen($msgPassword);
+    } else {
+        echo "fail";
     }
 }
 ?>
@@ -126,28 +132,19 @@ if (isset($_POST['register'])) {
             <h3>Register</h3>
             <input type="text" name="email" class="form-control" placeholder="Email" autofocus>
             <p><?php echo $msgEmail ?></p>
-            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password"
-                >
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password">
             <p><?php echo $msgPassword ?></p>
-            <input type="password" name="confirm" id="inputPassword" class="form-control" placeholder="Conform Password"
-                >
-                <p><?php echo $msgConfirm ?></p>
+            <input type="password" name="confirm" id="inputPassword" class="form-control" placeholder="Conform Password">
+            <p><?php echo $msgConfirm ?></p>
             <input name="avatar" class="form-control" type="file" id="formFile">
+            <p><?php echo $msgAvatar ?></p>
             <button name="register" class="btn btn-lg btn-success btn-block" type="submit" value="Register">Register</button>
         </form>
     </section>
 
 
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 
 </html>
