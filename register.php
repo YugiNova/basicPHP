@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <style>
         body {
@@ -58,6 +59,8 @@
 // }
 // var_dump($_POST);
 
+require_once('database.php');
+
 $msgEmail = '';
 $msgPassword = '';
 $msgConfirm = '';
@@ -76,7 +79,6 @@ if (isset($_POST['register'])) {
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm'];
     $avatar = $_FILES["avatar"];
-    // $avatar = $_POST['avatar'];
 
     //validate email
     if (empty($email)) {
@@ -106,13 +108,13 @@ if (isset($_POST['register'])) {
         $msgAvatar = "Image is only .png or .jpeg";
     }
 
-    echo "<pre>";
-    var_dump($_FILES["avatar"]["type"]);
-    echo "</pre>";
+    // echo "<pre>";
+    // var_dump($_FILES["avatar"]["type"]);
+    // echo "</pre>";
 
-    if ($msgEmail === ""  && $msgPassword === "" && $msgConfirm  === "" && $msgAvatar === "") {
-        echo $email . sha1($password . "random");
-        echo "<br>" . sha1($password . "random");
+    if ($msgEmail === "" && $msgPassword === "" && $msgConfirm === "" && $msgAvatar === "") {
+        // echo $email . sha1($password . "random");
+        // echo "<br>" . sha1($password . "random");
         $target_dir = "uploads/";
         $target_file = $target_dir . uniqid(true) . "_" . basename($_FILES["avatar"]["name"]);
         if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
@@ -120,6 +122,19 @@ if (isset($_POST['register'])) {
         } else {
             echo "Upload that bai";
         }
+
+        //Add to database
+        $date = date('Y-m-d H:i:s');
+        $sql = "INSERT INTO user VALUES ('".rand(10,100)."','".$email."','".sha1($password . 'random')."','".$avatar["name"]."','" . $date . "')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "New user create successfully";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+
+        // $conn->close();
+
     } else {
         echo "fail";
     }
@@ -127,24 +142,44 @@ if (isset($_POST['register'])) {
 ?>
 
 <body>
+    <?php 
+        require_once('header.php');
+        require_once('header.php');
+    ?>
     <section>
-        <form method="POST" class="form-signin custom-form" action="<?php echo $_SERVER['PHP_SELF'] ?>" enctype="multipart/form-data">
+        <form method="POST" class="form-signin custom-form" action="<?php echo $_SERVER['PHP_SELF'] ?>"
+            enctype="multipart/form-data">
             <h3>Register</h3>
             <input type="text" name="email" class="form-control" placeholder="Email" autofocus>
-            <p><?php echo $msgEmail ?></p>
+            <p>
+                <?php echo $msgEmail ?>
+            </p>
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password">
-            <p><?php echo $msgPassword ?></p>
-            <input type="password" name="confirm" id="inputPassword" class="form-control" placeholder="Conform Password">
-            <p><?php echo $msgConfirm ?></p>
+            <p>
+                <?php echo $msgPassword ?>
+            </p>
+            <input type="password" name="confirm" id="inputPassword" class="form-control"
+                placeholder="Conform Password">
+            <p>
+                <?php echo $msgConfirm ?>
+            </p>
             <input name="avatar" class="form-control" type="file" id="formFile">
-            <p><?php echo $msgAvatar ?></p>
-            <button name="register" class="btn btn-lg btn-success btn-block" type="submit" value="Register">Register</button>
+            <p>
+                <?php echo $msgAvatar ?>
+            </p>
+            <button name="register" class="btn btn-lg btn-success btn-block" type="submit"
+                value="Register">Register</button>
         </form>
     </section>
 
+    <?php
+        include_once('footer.php');
+        include_once('footer.php');
+    ?>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
