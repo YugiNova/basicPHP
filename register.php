@@ -116,7 +116,8 @@ if (isset($_POST['register'])) {
         // echo $email . sha1($password . "random");
         // echo "<br>" . sha1($password . "random");
         $target_dir = "uploads/";
-        $target_file = $target_dir . uniqid(true) . "_" . basename($_FILES["avatar"]["name"]);
+        $basename = uniqid(true) . "_" . basename($_FILES["avatar"]["name"]);
+        $target_file = $target_dir .$basename;
         if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
             echo "Upload thanh cong";
         } else {
@@ -125,13 +126,15 @@ if (isset($_POST['register'])) {
 
         //Add to database
         $date = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO user VALUES ('".rand(10,100)."','".$email."','".sha1($password . 'random')."','".$avatar["name"]."','" . $date . "')";
+        $sql = "INSERT INTO user VALUES (null,'" . $email . "','" . sha1($password . 'random') . "','" . $basename . "','" . $date . "')";
 
         if ($conn->query($sql) === TRUE) {
             echo "New user create successfully";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
+
+
 
         // $conn->close();
 
@@ -142,9 +145,9 @@ if (isset($_POST['register'])) {
 ?>
 
 <body>
-    <?php 
-        require_once('header.php');
-        require_once('header.php');
+    <?php
+    require_once('header.php');
+    require_once('header.php');
     ?>
     <section>
         <form method="POST" class="form-signin custom-form" action="<?php echo $_SERVER['PHP_SELF'] ?>"
@@ -173,8 +176,13 @@ if (isset($_POST['register'])) {
     </section>
 
     <?php
-        include_once('footer.php');
-        include_once('footer.php');
+    include_once('userList.php');
+    ?>
+
+
+    <?php
+    include_once('footer.php');
+    include_once('footer.php');
     ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
