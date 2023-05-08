@@ -1,11 +1,8 @@
 <style>
-    table td img{
-        width: 5rem;
-        height: 5rem;
-    }
+    
 </style>
 
-<table class="table table-striped table-hover table-dark">
+<table class="table table-striped table-hover table-dark table-custom">
         <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -30,7 +27,10 @@
                     echo "<td>".gmdate($row['create_at'])."</td>";
                     echo "</tr>";
                 }
+            }else{
+                echo "No result";
             }
+            mysqli_data_seek($usersList);
             ?>
         </tbody>
     </table>

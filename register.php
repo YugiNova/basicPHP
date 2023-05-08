@@ -45,6 +45,16 @@
             margin-bottom: 1rem;
             text-align: left;
         }
+
+        .table-custom {
+            width: 70%;
+            margin: 0 auto;
+        }
+
+        table td img {
+            width: 5rem;
+            height: 5rem;
+        }
     </style>
 </head>
 
@@ -117,7 +127,7 @@ if (isset($_POST['register'])) {
         // echo "<br>" . sha1($password . "random");
         $target_dir = "uploads/";
         $basename = uniqid(true) . "_" . basename($_FILES["avatar"]["name"]);
-        $target_file = $target_dir .$basename;
+        $target_file = $target_dir . $basename;
         if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
             echo "Upload thanh cong";
         } else {
