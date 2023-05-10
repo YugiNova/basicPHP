@@ -10,12 +10,14 @@
                 <th scope="col">Password</th>
                 <th scope="col">Image</th>
                 <th scope="col">Create At</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
             <?php
             $getUsers = "select * from user";
-            $usersList = $conn->query($getUsers);
+            $getNewest10Users = "select * from user order by create_at DESC limit 10";
+            $usersList = $conn->query($getNewest10Users);
 
             if (mysqli_num_rows($usersList) > 0){
                 while ($row = mysqli_fetch_assoc($usersList)) {
@@ -25,12 +27,13 @@
                     echo "<td>".$row['password']."</td>";
                     echo "<td><img src='uploads/".$row['image_url']."'/></td>";
                     echo "<td>".gmdate($row['create_at'])."</td>";
+                    echo "<td><button>Delete</button></td>";
                     echo "</tr>";
                 }
             }else{
                 echo "No result";
             }
-            mysqli_data_seek($usersList);
+            mysqli_data_seek($usersList,0);
             ?>
         </tbody>
     </table>

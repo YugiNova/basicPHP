@@ -1,3 +1,6 @@
+<?php 
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,6 +43,7 @@
 </head>
 
 <?php
+include('database.php');
 //Super Global Variables
 // $num1 = $_GET['a'] ?? null;
 // $num2 = $_GET['b'] ?? null;
@@ -48,25 +52,57 @@
 //     echo "So thu 1: $num1, So thu 2: $num2";
 //     echo "<br>Tong: $num1 + $num2 = " . $num1 + $num2;
 // }
-var_dump($_POST);
+// var_dump($_POST);
 if (isset($_POST['login'])) {
     
     $email = $_POST['email'];
-    $password = $_POST['password'];
-    echo "Email: $email, Password: $password";
+    $password = sha1($_POST['password'] . 'random') ;
+    // echo "Email: $email, Password: $password";
+
+    $email = trim($email);
+    $email = htmlspecialchars($email);
+    $email =strip_tags($email);
     
+
+    $checkUserSql = "select username,password from user where username = '$email' and  password = '$password'";
+    $result = $conn->query($checkUserSql);
+    if (mysqli_num_rows($result) > 0){
+        $_SESSION['username'] = $email;
+        // echo "Dang nhap thanh cong";
+        var_dump($_SESSION);
+    }else{
+        
+        echo "Dang nhap that bai";
+    }
+}
+
+if(isset($_POST["logout"])){
+    unset($_SESSION['username']);
+    // session_destroy();
+}
+
+if(isset($_GET["lang"])){
+    setcookie('lang',$_GET['lang'],time()+86400);
+    $_COOKIE['lang'] = $_GET['lang'];
 }
 ?>
 
 <body>
     <section>
-        <form method="POST" class="form-signin custom-form" action="">
+       
+    <?php if(isset($_SESSION["username"])){ 
+                include("welcome.php");
+            }
+            else {?>
+                <form method="POST" class="form-signin custom-form" action="<?php echo $_SERVER['PHP_SELF']?>">
             <h3>Log In</h3>
             <input type="email" name="email" class="form-control" placeholder="Email" required autofocus>
             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password"
                 required>
             <button name="login" class="btn btn-lg btn-primary btn-block" type="submit" value="Log In">Sign in</button>
         </form>
+                <?php  }?>
+        
     </section>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
