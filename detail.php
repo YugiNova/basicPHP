@@ -75,9 +75,17 @@ $errors = [
     "password" => []
 ];
 
+if(isset($_GET['action']) && $_GET['action'] === "UserDetail" && isset($_GET['id'])){
+    $sqlSelectUser = "SELECT * FROM user WHERE id=".$_GET['id'];
+    $resultUser= $conn->query($sqlSelectUser);
+    $row = mysqli_fetch_assoc($resultUser);
 
 
-if (isset($_POST['register'])) {
+    $emailValue = $row["username"];
+    $passwordValue = $row['password'];
+}
+
+if (isset($_POST['Update'])) {
 
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -115,6 +123,7 @@ if (isset($_POST['register'])) {
     // echo "<pre>";
     // var_dump($_FILES["avatar"]["type"]);
     // echo "</pre>";
+    $basename =null;
 
     if ($msgEmail === "" && $msgPassword === "" && $msgConfirm === "" && $msgAvatar === "") {
         // echo $email . sha1($password . "random");
@@ -123,14 +132,14 @@ if (isset($_POST['register'])) {
         $basename = uniqid(true) . "_" . basename($_FILES["avatar"]["name"]);
         $target_file = $target_dir . $basename;
         if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
-            echo "Upload thanh cong";
+            echo "Update thanh cong";
+            unlink('upload/'.$basename);
         } else {
-            echo "Upload that bai";
+            echo "Update that bai";
         }
 
-        //Add to database
-        $date = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO user VALUES (null,'" . $email . "','" . sha1($password . 'random') . "','" . $basename . "','" . $date . "')";
+        //Update
+        $sql = "UPDATE user SET username='".$email."', password='".$password."',image_url='".$avatar."'";
 
         if ($conn->query($sql) === TRUE) {
             echo "New user create successfully";
@@ -139,8 +148,6 @@ if (isset($_POST['register'])) {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
 
-
-
         // $conn->close();
 
     } else {
@@ -148,15 +155,8 @@ if (isset($_POST['register'])) {
     }  
 }
 
-if(isset($_GET['action']) && $_GET['action'] === "UserDetail" && isset($_GET['id'])){
-    $sqlSelectUser = "SELECT * FROM user WHERE id=".$_GET['id'];
-    $resultUser= $conn->query($sqlSelectUser);
-    $row = mysqli_fetch_assoc($resultUser);
 
-    $emailValue = $row['username'];
-    $password = $row['username'];
-    $emailValue = $row['username'];
-}
+
 ?>
 
 <body>
@@ -167,17 +167,17 @@ if(isset($_GET['action']) && $_GET['action'] === "UserDetail" && isset($_GET['id
     <section>
         <form method="POST" class="form-signin custom-form" action="<?php echo $_SERVER['PHP_SELF'] ?>"
             enctype="multipart/form-data">
-            <h3>Register</h3>
-            <input type="text" name="email" class="form-control" placeholder="Email" autofocus>
+            <h3>Detail</h3>
+            <input type="text" name="email" class="form-control" placeholder="Email" value="<?=$emailValue?>" autofocus>
             <p>
                 <?php echo $msgEmail ?>
             </p>
-            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password">
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" value="<?=$passwordValue?>">
             <p>
                 <?php echo $msgPassword ?>
             </p>
-            <input type="password" name="confirm" id="inputPassword" class="form-control"
-                placeholder="Conform Password">
+            <input type="password" name="confirm" id="inputPassword" class="form-control" value="<?=$passwordValue?>"
+                placeholder="Conform Password"> 
             <p>
                 <?php echo $msgConfirm ?>
             </p>
@@ -185,8 +185,8 @@ if(isset($_GET['action']) && $_GET['action'] === "UserDetail" && isset($_GET['id
             <p>
                 <?php echo $msgAvatar ?>
             </p>
-            <button name="register" class="btn btn-lg btn-success btn-block" type="submit"
-                value="Register">Register</button>
+            <button name="Update" class="btn btn-lg btn-success btn-block" type="submit"
+                value="Register">Update</button>
         </form>
     </section>
 
