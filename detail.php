@@ -83,14 +83,15 @@ if(isset($_GET['action']) && $_GET['action'] === "UserDetail" && isset($_GET['id
 
     $emailValue = $row["username"];
     $passwordValue = $row['password'];
+    
 }
-
 if (isset($_POST['Update'])) {
-
+    $userID = $_POST['userid'];
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm'];
     $avatar = $_FILES["avatar"];
+    
 
     //validate email
     if (empty($email)) {
@@ -133,19 +134,23 @@ if (isset($_POST['Update'])) {
         $target_file = $target_dir . $basename;
         if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file)) {
             echo "Update thanh cong";
-            unlink('upload/'.$basename);
+            $sqlSelectImg = "SELECT image_url FROM user WHERE id=".$userID;
+            $resultSelectImg = $conn->query($sqlSelectImg);
+            $row = mysqli_fetch_assoc($resultSelectImg);
+            $imageUrl = $row['image_url'];
+            unlink('uploads/'.$imageUrl);
         } else {
             echo "Update that bai";
         }
 
         //Update
-        $sql = "UPDATE user SET username='".$email."', password='".$password."',image_url='".$avatar."'";
+        $sqlUpdate = "UPDATE user SET username='".$email."', password='".sha1($password . 'random')."',image_url='".$basename."' WHERE id = ".$userID;
 
-        if ($conn->query($sql) === TRUE) {
-            echo "New user create successfully";
+        if ($conn->query($sqlUpdate) === TRUE) {
+            echo "User update successfully";
             header('Location: '.URL."userList.php");
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Error: " . $sqlUpdate . "<br>" . $conn->error;
         }
 
         // $conn->close();
@@ -185,6 +190,7 @@ if (isset($_POST['Update'])) {
             <p>
                 <?php echo $msgAvatar ?>
             </p>
+            <input type="hidden" name="userid" id="userid" value="<?=$_GET['id']?>" class="form-control">
             <button name="Update" class="btn btn-lg btn-success btn-block" type="submit"
                 value="Register">Update</button>
         </form>
