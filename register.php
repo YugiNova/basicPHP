@@ -64,6 +64,7 @@
 // var_dump($_POST);
 
 require_once('database.php');
+require("prepare.php");
 
 $msgEmail = '';
 $msgPassword = '';
@@ -78,7 +79,6 @@ $errors = [
 
 
 if (isset($_POST['register'])) {
-
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm'];
@@ -130,7 +130,13 @@ if (isset($_POST['register'])) {
 
         //Add to database
         $date = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO user VALUES (null,'" . $email . "','" . sha1($password . 'random') . "','" . $basename . "','" . $date . "')";
+        $arrayData = [
+            "username" => $email,
+            "password" => sha1($password . "random"),
+            "image_url" => $basename,
+            "create_at" => $date
+        ];
+        $sql =prepareStatmentInsert($arrayData,'user');
 
         if ($conn->query($sql) === TRUE) {
             echo "New user create successfully";

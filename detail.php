@@ -64,6 +64,7 @@
 // var_dump($_POST);
 
 require_once('database.php');
+require('prepare.php');
 
 $msgEmail = '';
 $msgPassword = '';
@@ -144,7 +145,12 @@ if (isset($_POST['Update'])) {
         }
 
         //Update
-        $sqlUpdate = "UPDATE user SET username='".$email."', password='".sha1($password . 'random')."',image_url='".$basename."' WHERE id = ".$userID;
+        $arrayData = [
+            "username" => $email,
+            "password" => sha1($password . "random"),
+            "image_url" => $basename,
+        ];
+        $sqlUpdate = prepareStatmentUpdate($arrayData,'user',$userID);
 
         if ($conn->query($sqlUpdate) === TRUE) {
             echo "User update successfully";
