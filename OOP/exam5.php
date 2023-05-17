@@ -1,6 +1,6 @@
 <?php 
     
-    Class Animal{
+    abstract Class Animal{
         //Attributes
         private $name;
         private $age;
@@ -38,14 +38,11 @@
             return $this->gender;
         }
 
-        public function makeSound(){
-            echo "Make sound from parent";
-        }
+        abstract public function makeSound();
     }
 
     Class Cat extends Animal{
         public function makeSound(){
-            parent::makeSound();
             echo "Meoz Meoz";
         }
     }
@@ -56,6 +53,8 @@
             echo "Woof Woof";
         }
     }
+
+    // $animal = new Animal;
 
     $cat = new Cat;
     $cat->setName("Meo");
