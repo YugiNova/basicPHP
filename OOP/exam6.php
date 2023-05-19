@@ -1,5 +1,17 @@
+<!-- final, interface -->
+
 <?php 
-    
+    interface canRun{
+        public function canRun();
+    }
+    interface canSwim{
+        public function canSwim();
+    }
+    interface canFly{
+        public function canFly();
+    }
+
+
     abstract Class Animal{
         //Attributes
         private $name;
@@ -39,18 +51,34 @@
         }
 
         abstract public function makeSound();
-    }
 
-    Class Cat extends Animal{
-        public function makeSound(){
-            echo __METHOD__;
+        final public function eat(){
+            echo "eat";
         }
     }
 
-    Class Dog extends Animal{
+    Class Cat extends Animal implements canRun,canSwim{
+        public function makeSound(){
+            echo __METHOD__;
+        }
+
+        public function canRun(){
+            echo "Run";
+        }
+
+        public function canSwim(){
+            echo "Swim";
+        }
+    }
+
+    Class Bird extends Animal implements canFly{
         public function makeSound(){
             // parent::makeSound();
             echo __METHOD__;
+        }
+
+        public function canFly(){
+            echo "Fly";
         }
     }
 
@@ -61,17 +89,9 @@
     $cat->setAge(2);
     $cat->setGender("male");
 
-    $dog = new Dog;
-    $dog->setName("Cho");
-    $dog->setAge(3);
-    $dog->setGender("female");
 
     echo "Cat: ".$cat->getName().' - Age: '.$cat->getAge().' - Gender: '.$cat->getGender();
-    echo "<br>";
-    echo "Cat: ".$dog->getName().' - Age: '.$dog->getAge().' - Gender: '.$dog->getGender();
 
     echo "<br>";
-    $cat->makeSound();
-    echo "<br>";
-    $dog->makeSound();
+    $cat->canRun();
 ?>
