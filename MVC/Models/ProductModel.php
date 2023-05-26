@@ -1,5 +1,13 @@
 <?php 
-    class ProductModel {
+    class ProductModel extends BaseModel{
+        const TABLE = 'product';
+
+        public function getNoteList() {
+            $data = $this->all(self::TABLE);
+
+            return $data;
+        }
+
         public function getProductList() {
             return [
                 ['id' => 1, 'name' => 'Iphone 12'],

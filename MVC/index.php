@@ -11,56 +11,8 @@
 
     <?php 
         require './Helpers/helper.php';
-        // require './Controllers/BaseController.php';
-        // if(isset($_GET['url'])){
-        //     $url = explode("/",$_GET['url']);
-        //     $controller = $url[0];
-        //     $action = $url[1];
-
-
-        //     $controller = explode("_",$controller);
-        //     $tempUrl = '';
-        //     foreach($controller as $value){
-        //         $tempUrl .= ucfirst($value);
-        //     }         
-        //     $url = './Controllers/'.ucfirst($tempUrl).'Controller.php';
-        //     // var_dump($url);
-        //     require $url;
-
-        //     $class = $tempUrl.'Controller';
-        //     $objectController = new $class;
-        //     $objectController->$action();
-        // }
         require './Core/App.php';
         $app = new App;
-
-        // class entryPoint {
-        //     private $url;
-        //     private $controller;
-        //     private $action;
-
-        //     public function __construct($url){
-        //         require './Controllers/BaseController.php';
-        //         $url = explode("/",$url);
-        //         $this->$controller = $this->$url[0];
-        //         $this->$action = $this->$url[1];
-        //     }
-
-        //     public function loadController(){
-        //         $controller = explode("_",$controller);
-        //         $tempUrl = '';
-        //         foreach($controller as $value){
-        //             $tempUrl .= ucfirst($value);
-        //         }         
-        //         $url = './Controllers/'.ucfirst($tempUrl).'Controller.php';
-        //         // var_dump($url);
-        //         require $url;
-
-        //         $class = $tempUrl.'Controller';
-        //         $objectController = new $class;
-        //         $objectController->$action();
-        //     }
-        // }
     ?>
 
     <a href="index.php?url=user/index">List User</a><br>
