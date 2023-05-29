@@ -37,5 +37,26 @@
 
             return $data;
         }
+
+        public function createData($table,$arrayData){
+            foreach($arrayData as $key => $value){
+                $sqlField[] = $key;
+                $sqlValue[] = "'".$value."'";
+            }
+            $sqlField = implode(",",$sqlField);
+            $sqlValue = implode(",",$sqlValue);
+            $sql = "INSERT INTO $table ($sqlField) VALUES ($sqlValue)";
+            $result = mysqli_query($this->connect,$sql);
+
+            return $result;
+        }
+
+        public function deleteData($table,$id){
+            $sql = "DELETE FROM $table where id = $id";
+            $result = mysqli_query($this->connect,$sql);
+
+            return $result;
+        }
+        
     }
 ?>

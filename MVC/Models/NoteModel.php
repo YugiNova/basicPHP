@@ -14,5 +14,13 @@
             return $data[0];
         }
 
+
+        public function createNote($data){
+            return $this->createData(self::TABLE,$data);
+        }
+
+        public function deleteNote($id){
+            return $this->deleteData(self::TABLE,$id);
+        }
     }
-?>
+?>  

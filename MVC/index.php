@@ -11,6 +11,7 @@
 
     <?php 
         require './Helpers/helper.php';
+        require './Helpers/prepare.php';
         require './Core/App.php';
         $app = new App;
     ?>
