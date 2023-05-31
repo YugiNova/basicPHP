@@ -3,7 +3,7 @@
         protected $connect;
 
         public function __construct(){
-            require './Core/database.php';
+            
             $db = new Database();
             $this->connect = $db->connect();
         }
@@ -47,7 +47,7 @@
             $sqlValue = implode(",",$sqlValue);
             $sql = "INSERT INTO $table ($sqlField) VALUES ($sqlValue)";
             $result = mysqli_query($this->connect,$sql);
-
+            
             return $result;
         }
 
@@ -57,6 +57,18 @@
 
             return $result;
         }
+        
+
+        public function updateData($table,$arrayData,$id){
+            foreach($arrayData as $key => $value){
+                $sqlField[] = "$key = '$value'";
+            }
+            $sqlField = implode(",",$sqlField);
+            $sql = "UPDATE $table SET $sqlField WHERE id = $id";
+            $result = mysqli_query($this->connect,$sql);
+            return $result;
+        }
+
         
     }
 ?>

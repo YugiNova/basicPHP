@@ -22,5 +22,9 @@
         public function deleteNote($id){
             return $this->deleteData(self::TABLE,$id);
         }
+
+        public function updateNote($data,$id){
+            return $this->updateData(self::TABLE,$data,$id);
+        }
     }
 ?>  

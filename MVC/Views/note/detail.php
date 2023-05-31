@@ -1,8 +1,4 @@
-<?php 
-    foreach($note_detail as $key => $value){
-        echo "<h3>$key : $value</h3>";
-    }
-?>
+
 
 <h1>Update Note</h1>
 
@@ -31,5 +27,6 @@
     echo showError($errors??[],'userid');
     ?>
     <br>
+    <input name='id' type='hidden' value="<?=$note_detail['id']?>"/>
     <button  name="submit">Submit</button>
 </form>

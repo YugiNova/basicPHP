@@ -4,6 +4,7 @@
         private $controller;
 
         public function __construct(){
+            require './Core/database.php';
             require './Controllers/BaseController.php';
             require './Models/BaseModel.php';
             if(isset($_GET['url'])){

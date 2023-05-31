@@ -19,6 +19,8 @@
         }
 
         public function create () {
+        
+
             return $this->view('product.create_product') ;
         }
     }

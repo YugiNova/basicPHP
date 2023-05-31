@@ -12,16 +12,11 @@
     <br>
     <select  name="user_id">
         <option value='0'>--- Please select ---</option>
-        <option value='1'>1. Nguyen Van A</option>
-        <option value='2'>2. Tran Van B</option>
-        <option value='3'>3. Ta Thi C</option>
+        <?php foreach($users as $key => $value) : ?>
+            <option value='<?=$value['id'];?>'><?=$value['name'];?></option>
+        <?php endforeach ?>
     </select>
-    <?php 
-    // if(isset($errors['userid'])){
-    //     foreach($errors['userid'] as $error){
-    //         echo "<br><p style='color:red'>$error</p><br>";
-    //     }
-    // }  
+    <?php
     echo showError($errors??[],'userid');
     ?>
     <br>
