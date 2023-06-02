@@ -1,3 +1,13 @@
+<?php 
+    session_start();
+    if(isset($_SESSION['id'])){
+        echo $_SESSION['id'];
+    }
+    else{
+        echo "you are not log in";
+    }
+    
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,7 +56,6 @@
         require './Helpers/helper.php';
         require './Helpers/prepare.php';
         require './Core/App.php';
-        $app = new App;
     ?>
 
     <a href="index.php?url=user/index">List User</a><br>
@@ -59,6 +68,9 @@
     <a href="index.php?url=note/index">List Note</a><br>
     <a href="index.php?url=note/create">Create Note</a><br>
 
+    <?php 
+        $app = new App;
+    ?>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

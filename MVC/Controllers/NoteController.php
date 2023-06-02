@@ -7,21 +7,20 @@
             $this->loadModel("NoteModel");
             $this->loadModel("UserModel");
             $this->noteModel = new NoteModel;
-            
             $this->userModal = new UserModel;
+            
         }
 
         public function index (){
             $data = [
-                'database' => $this->noteModel->getNoteList(),
+                'database' => $this->noteModel->getNodeListByUserID(),
             ];
 
             return $this->view('note.list_note',$data);
         }
 
         public function create () {
-            $errors = [];
-
+            $errors = [];  
             if(isset($_POST['submit'])){
                 $content = $_POST['content'];  
                 $userId = $_POST['user_id'];
@@ -50,8 +49,9 @@
                     throw new \Exception('Something went wrong');
                 }
             }
-
-            $users = $this->userModel->getUserList();
+            
+            $users = $this->userModal->getUserList();
+            
 
             return $this->view('note.create_note',["users" => $users]);
         }
@@ -100,7 +100,21 @@
             }
 
             $data = $this->noteModel->getNoteDetail($id);
-            return $this->view('note.detail',['note_detail' => $data]);
+
+            if(is_null($data)){
+                return $this->view('pages.404');
+            }
+
+            if(isset($_SESSION['id'])){
+                if($_SESSION['id'] === $data['user_id']){
+                    
+                    return $this->view('note.detail',['note_detail' => $data]);
+                }
+                else{
+                    echo '<script>alert("You dont have permission")</script>';
+                    return $this->view('pages.403');
+                }
+            }  
         }
 
     }

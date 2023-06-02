@@ -94,21 +94,23 @@
                 $email =strip_tags($email);
                 
             
-                $checkUserSql = $this->userModel->checkLogin($email,$password);
+                $userID = $this->userModel->checkLogin($email,$password);
 
-                if ($checkUserSql){
-                    $_SESSION['username'] = $email;
-                    header('Location: '.'index.php?url=user/index');
+                if ($userID){
+                    // unset($_SESSION['id']);
+                    $_SESSION['id'] = $userID;
+                    header('Location: '.'index.php?url=note/index');
                     // echo "Dang nhap thanh cong";
-                    var_dump($_SESSION);
                 }else{   
-                    return $this->view('user.login',['login_errors' => 'Username or password invalid']);
+                    $errors['password'][] = 'Username or password invalid';
+                    return $this->view('user.login',['errors' => $errors]);
                 }
             }
 
             if(isset($_POST["logout"])){
-                unset($_SESSION['username']);
+                unset($_SESSION['id']);
                 // session_destroy();
+                header('Location: '.'index.php?url=user/login');
             }
             
             if(isset($_GET["lang"])){

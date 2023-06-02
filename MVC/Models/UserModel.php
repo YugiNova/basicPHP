@@ -38,7 +38,13 @@
             $sql = "SELECT id from $table where email = '$email' and password = '$password'";
             $query = mysqli_query($this->connect,$sql);
             $rows = mysqli_num_rows($query);
-            return $rows >0? true:false;
+            if($rows){
+                $data = $query->fetch_assoc();
+                return $data['id'];
+            }
+            else{
+                return null;
+            }
         }
     }
 ?>  

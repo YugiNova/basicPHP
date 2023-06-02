@@ -2,6 +2,20 @@
     class NoteModel extends BaseModel{
         const TABLE = 'note';
 
+        public function getNodeListByUserID(){
+            $result = $this->connect->query('select * from '.self::TABLE.' where user_id = '.$_SESSION['id']);
+            $data = [];
+
+            if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            } else {
+                echo "0 results";
+            }
+            return $data;
+        }
+
         public function getNoteList() {
             $data = $this->all(self::TABLE);
 
